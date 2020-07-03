@@ -4,6 +4,7 @@ import life.zhaohuan.community.community.dto.PaginationDTO;
 import life.zhaohuan.community.community.dto.QuestionDTO;
 import life.zhaohuan.community.community.exception.CustomizedErrorCode;
 import life.zhaohuan.community.community.exception.CustomizedException;
+import life.zhaohuan.community.community.mapper.QuestionExtMapper;
 import life.zhaohuan.community.community.mapper.QuestionMapper;
 import life.zhaohuan.community.community.mapper.UserMapper;
 import life.zhaohuan.community.community.model.Question;
@@ -22,6 +23,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -134,5 +138,12 @@ public class QuestionService {
                 throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
