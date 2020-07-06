@@ -4,8 +4,10 @@ import life.zhaohuan.community.community.enums.CommentTypeEnum;
 import life.zhaohuan.community.community.exception.CustomizedErrorCode;
 import life.zhaohuan.community.community.exception.CustomizedException;
 import life.zhaohuan.community.community.mapper.CommentMapper;
+import life.zhaohuan.community.community.mapper.QuestionExtMapper;
 import life.zhaohuan.community.community.mapper.QuestionMapper;
 import life.zhaohuan.community.community.model.Comment;
+import life.zhaohuan.community.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class CommentService {
     private CommentMapper commentMapper;
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public void insert(Comment comment) {
        if(comment.getParentId() == null || comment.getParentId() == 0){
@@ -29,9 +34,16 @@ public class CommentService {
            if(dbComment == null){
                throw new CustomizedException(CustomizedErrorCode.COMMENT_NOT_FOUND);
            }
-
+            commentMapper.insert(comment);
        }else{
            // 回复问题
+           Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
+           if(question == null){
+               throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
+           }
+           commentMapper.insert(comment);
+           question.setCommentCount(1);
+           questionExtMapper.incCommentCount(question);
        }
     }
 }

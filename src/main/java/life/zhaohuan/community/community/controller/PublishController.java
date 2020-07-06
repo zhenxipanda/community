@@ -1,7 +1,6 @@
 package life.zhaohuan.community.community.controller;
 
 import life.zhaohuan.community.community.dto.QuestionDTO;
-import life.zhaohuan.community.community.mapper.QuestionMapper;
 import life.zhaohuan.community.community.model.Question;
 import life.zhaohuan.community.community.model.User;
 import life.zhaohuan.community.community.service.QuestionService;
@@ -22,7 +21,7 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id") Integer id,
+    public String edit(@PathVariable(name = "id") Long id,
                        Model model){
         QuestionDTO question = questionService.getById(id);
         model.addAttribute("title" , question.getTitle());
@@ -42,7 +41,7 @@ public class PublishController {
             @RequestParam(value = "title" , required = false) String title,
             @RequestParam(value = "description" , required = false) String description,
             @RequestParam(value = "tag" , required = false) String tag,
-            @RequestParam(value = "id" , required = false) Integer id,
+            @RequestParam(value = "id" , required = false) Long id,
             HttpServletRequest request,
             Model model){
 
