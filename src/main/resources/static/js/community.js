@@ -17,7 +17,7 @@ function post(){
                 if (response.code == 2003) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=2859958f9f059979ed3a&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
+                        window.open("https://github.com/login/oauth/authorize?client_id=2286e064a2bfcca68e0c&redirect_uri=http://localhost:8080/callback&scope=user&state=1");
                         window.localStorage.setItem("closable", true);
                     }
                 } else {
@@ -27,6 +27,4 @@ function post(){
         },
         dataType: "json"
     });
-    console.log(questionId);
-    console.log(content);
 }
