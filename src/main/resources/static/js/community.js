@@ -1,6 +1,11 @@
 function post(){
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
+    // 如果没有值就为true
+    if(!content){
+         alert("不能回复空内容");
+         return ;
+    }
     $.ajax({
         type: "POST",
         url: "/comment",
@@ -12,7 +17,7 @@ function post(){
         }),
         success: function (response) {
             if (response.code == 200) {
-                window.location.reload();
+                window.location.reload();  //自动刷新，回复完，就不再手动刷新
             } else {
                 if (response.code == 2003) {
                     var isAccepted = confirm(response.message);

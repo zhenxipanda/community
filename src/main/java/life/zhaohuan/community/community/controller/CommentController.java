@@ -6,6 +6,7 @@ import life.zhaohuan.community.community.exception.CustomizedErrorCode;
 import life.zhaohuan.community.community.model.Comment;
 import life.zhaohuan.community.community.model.User;
 import life.zhaohuan.community.community.service.CommentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,10 @@ public class CommentController {
             return ResultDTO.errorOf(CustomizedErrorCode.NO_LOGIN);
         }
 
+        // 如果评论内容为空，提示用户
+        if(commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())){
+            return ResultDTO.errorOf(CustomizedErrorCode.CONTENT_IS_EMPTY);
+        }
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());
         comment.setContent(commentCreateDTO.getContent());
