@@ -1,8 +1,8 @@
 package life.zhaohuan.community.community.controller;
 
-import life.zhaohuan.community.community.dto.CommentCreateDTO;
 import life.zhaohuan.community.community.dto.CommentDTO;
 import life.zhaohuan.community.community.dto.QuestionDTO;
+import life.zhaohuan.community.community.enums.CommentTypeEnum;
 import life.zhaohuan.community.community.service.CommentService;
 import life.zhaohuan.community.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,
                            Model model){
         QuestionDTO questionDTO = questionService.getById(id);
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id , CommentTypeEnum.QUESTION);
         //累加阅读数
         questionService.incView(id);
         model.addAttribute("question" , questionDTO);
