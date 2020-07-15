@@ -4,10 +4,7 @@ import life.zhaohuan.community.community.dto.CommentDTO;
 import life.zhaohuan.community.community.enums.CommentTypeEnum;
 import life.zhaohuan.community.community.exception.CustomizedErrorCode;
 import life.zhaohuan.community.community.exception.CustomizedException;
-import life.zhaohuan.community.community.mapper.CommentMapper;
-import life.zhaohuan.community.community.mapper.QuestionExtMapper;
-import life.zhaohuan.community.community.mapper.QuestionMapper;
-import life.zhaohuan.community.community.mapper.UserMapper;
+import life.zhaohuan.community.community.mapper.*;
 import life.zhaohuan.community.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,9 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
     @Transactional
     public void insert(Comment comment) {
        if(comment.getParentId() == null || comment.getParentId() == 0){
@@ -48,6 +48,13 @@ public class CommentService {
                throw new CustomizedException(CustomizedErrorCode.COMMENT_NOT_FOUND);
            }
             commentMapper.insert(comment);
+
+           // 增加评论数
+           Comment parentComment = new Comment();
+           parentComment.setId(comment.getParentId());
+           parentComment.setCommentCount(1);
+           commentExtMapper.incCommentCount(parentComment);
+
        }else{
            // 回复问题
            Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
