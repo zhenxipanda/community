@@ -112,3 +112,21 @@ function collapseComments(e) {
         }
     }
 }
+// select-tag是publish.html中的一个div id
+// 一点击标签那，就显示标签框
+function showSelectTag() {
+    $("#select-tag").show();
+}
+// publish.html 有一个定义的 onclick 方法，所以需要在这个文件中定义
+// 一点击标签，就自动把内容写到输入框中
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (previous.indexOf(value) == -1) {  // 如果存在，就不添加了，就是可能点了多次
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
+        }
+    }
+}

@@ -1,9 +1,11 @@
 package life.zhaohuan.community.community.controller;
 
+import life.zhaohuan.community.community.cache.TagCache;
 import life.zhaohuan.community.community.dto.QuestionDTO;
 import life.zhaohuan.community.community.model.Question;
 import life.zhaohuan.community.community.model.User;
 import life.zhaohuan.community.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +30,14 @@ public class PublishController {
         model.addAttribute("description" , question.getDescription());
         model.addAttribute("tag" , question.getTag());
         model.addAttribute("id" , question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
+    // 没有修改的时候，进入这个
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -48,6 +53,7 @@ public class PublishController {
         model.addAttribute("title" , title);
         model.addAttribute("description" , description);
         model.addAttribute("tag" , tag);
+        model.addAttribute("tags", TagCache.get());
 
         if(title == null || title.equals("")){
             model.addAttribute("error" , "标题不能为空");
@@ -61,6 +67,13 @@ public class PublishController {
             model.addAttribute("error" , "标签不能为空");
             return "publish";
         }
+
+        String invalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "输入非法标签:" + invalid);
+            return "publish";
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             model.addAttribute("error","用户未登录");
