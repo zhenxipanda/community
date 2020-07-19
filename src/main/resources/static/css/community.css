@@ -48,10 +48,11 @@ body{
     padding-top: 10px;
 }
 .publish-tag-tab .label-info{
-    margin-right: 10px;
+    white-space: normal;  /*  换行  */
+    margin: 5px 5px;
+    display: inline-block;
 }
 .community-menu {
-    display: block;
     color: #999;
     font-size: 13px;
     margin-bottom: 15px;
