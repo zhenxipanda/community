@@ -28,26 +28,23 @@ public class ProfileController {
     public String profile(HttpServletRequest request,
                           @PathVariable(name = "action") String action,
                           Model model,
-                          @RequestParam(name = "page",defaultValue = "1") Integer page,
-                          @RequestParam(name = "size",defaultValue = "5") Integer size){
+                          @RequestParam(name = "page", defaultValue = "1") Integer page,
+                          @RequestParam(name = "size", defaultValue = "5") Integer size) {
         User user = (User) request.getSession().getAttribute("user");
         // 如果用户为空，就跳到登录页面
-        if(user == null){
+        if (user == null) {
             return "redirect:/";
         }
-        if("questions".equals(action)){
-            model.addAttribute("section","questions");
-            model.addAttribute("sectionName","我的提问");
+        if ("questions".equals(action)) {
+            model.addAttribute("section", "questions");
+            model.addAttribute("sectionName", "我的提问");
             PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination", paginationDTO);
-        }
-        else if("replies".equals(action)){
+        } else if ("replies".equals(action)) {
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
-            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("pagination", paginationDTO);
-            model.addAttribute("unreadCount", unreadCount);
-            model.addAttribute("sectionName","最新回复");
+            model.addAttribute("sectionName", "最新回复");
         }
         return "profile";
     }

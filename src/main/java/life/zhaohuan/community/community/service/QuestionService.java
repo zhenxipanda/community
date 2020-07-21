@@ -70,6 +70,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
+    // 在profileController 调用，获取当前用户所提的问题
     public PaginationDTO list(Long userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
@@ -97,6 +98,9 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
                 .andCreatorEqualTo(userId);
+        // 自己修复的
+        // 看看能否 profile.html 的 我的问题是 按时间倒序 可以诶！
+        example.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
