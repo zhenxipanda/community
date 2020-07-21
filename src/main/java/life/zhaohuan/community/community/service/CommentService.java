@@ -39,7 +39,7 @@ public class CommentService {
     private NotificationMapper notificationMapper;
 
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment , User commentator) {
        if(comment.getParentId() == null || comment.getParentId() == 0){
            throw new CustomizedException(CustomizedErrorCode.TARGET_PARAM_NOT_FOUND);
        }
@@ -51,6 +51,11 @@ public class CommentService {
            Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
            if(dbComment == null){
                throw new CustomizedException(CustomizedErrorCode.COMMENT_NOT_FOUND);
+           }
+           // 回复问题
+           Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+           if(question == null){
+               throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
            }
             commentMapper.insert(comment);
 
@@ -77,9 +82,9 @@ public class CommentService {
     }
 
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
-        if (receiver == comment.getCommentator()) {
-            return;
-        }
+//        if (receiver == comment.getCommentator()) {
+//            return;
+//        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationType.getType());

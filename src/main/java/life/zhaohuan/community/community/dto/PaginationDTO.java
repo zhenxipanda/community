@@ -9,8 +9,8 @@ import java.util.List;
  * 需求：让每个Question 也显示页码等信息
  */
 @Data
-public class PaginationDTO {
-    private List<QuestionDTO> questions;
+public class PaginationDTO<T> {
+    private List<T> data;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;
