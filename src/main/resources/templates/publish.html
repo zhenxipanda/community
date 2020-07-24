@@ -30,18 +30,22 @@
                 </div>
                 <div class="form-group" id="question-editor">
                     <label for="description">问题补充 (必填，请参照右侧提示) ：</label>
-                    <textarea name="description" id="description" th:text="${description}" style="display: none;" class="form-control"
+                    <textarea name="description" id="description" th:text="${description}" style="display: none;"
+                              class="form-control"
                               cols="30" rows="10"></textarea>
                 </div>
                 <script type="text/javascript">
-                    $(function() {
+                    $(function () {
                         var editor = editormd("question-editor", {
-                             width  : "100%",
-                             height : 350,
-                             path   : "/js/lib/",
+                            width: "100%",
+                            height: 350,
+                            path: "/js/lib/",
                             delay: 0,
-                            watch:false,
-                            placeholder: "请输入问题描述"
+                            watch: false,
+                            placeholder: "请输入问题描述",
+                            imageUpload: true,
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL: "/file/upload",
                         });
                     });
                 </script>
@@ -66,8 +70,8 @@
                                 <span>
                                     <span th:each="selectTag: ${selectCategory.tags}">
                                        <span class="community-tag" onclick="selectTag(this)"
-                                          th:data-tag="${selectTag}"
-                                          th:text="${' '+selectTag}">
+                                             th:data-tag="${selectTag}"
+                                             th:text="${' '+selectTag}">
                                        </span>
                                     </span>
                                 </span>
