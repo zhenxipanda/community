@@ -73,6 +73,9 @@ public class CommentService {
            if(question == null){
                throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
            }
+           // 解决回复评论数 为 null 的问题，一直不显示，因为 null + 1 ,不成功
+           // 创建 comment 的时候，初始化为0.因为数据库设置了默认是0，并且 0+ 1也没问题，所以修改这里
+           comment.setCommentCount(0);
            commentMapper.insert(comment);
            question.setCommentCount(1);
            questionExtMapper.incCommentCount(question);
@@ -82,6 +85,7 @@ public class CommentService {
     }
 
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+        // 如果自己给自己回复，就不用通知
 //        if (receiver == comment.getCommentator()) {
 //            return;
 //        }
