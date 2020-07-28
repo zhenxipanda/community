@@ -25,17 +25,24 @@ public class SessionInterceptor implements HandlerInterceptor {
     private NotificationService notificationService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 实现持久化登录 ，是指在登录状态下，打开另一个浏览器输入网页，仍然保持登录状态
+        // 前后端以 token 进行验证
+        // 通过request得到cookie
         Cookie[] cookies = request.getCookies();
         if(cookies != null && cookies.length != 0){
             for (Cookie cookie : cookies) {
                 if(cookie != null){
+                    // 找到 cookie 的 主键(name) 等于 “token”
                     if(cookie.getName().equals("token")){
+                        // 获取cookie 的 值(value)
                         String token = cookie.getValue();
                         UserExample userExample = new UserExample();
                         userExample.createCriteria()
                                 .andTokenEqualTo(token);
+                        // 找到 User 中的 token 属性 的值 等于 cookie 的值 token 的用户
                         List<User> users = userMapper.selectByExample(userExample);
                         if(users.size() != 0){
+                            // 将用户写到 session 中，在页面显示
                             request.getSession().setAttribute("user" , users.get(0));
                             Long unreadCount = notificationService.unreadCount(users.get(0).getId());
                             request.getSession().setAttribute("unreadCount" , unreadCount);

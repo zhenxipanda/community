@@ -10,6 +10,7 @@ import java.io.IOException;
 
 @Component
 public class GithubProvider {
+    // 使用OKHttp 调用accsee_token接口并且携带code 获得 access_token
     public String getAccessToken(AccessTokenDTO accessTokenDTO){
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();
@@ -28,6 +29,7 @@ public class GithubProvider {
             return null;
     }
 
+    // 通过access_token 获取Github User
     public GithubUser getUser(String accessToken){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
