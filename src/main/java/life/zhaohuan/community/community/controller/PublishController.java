@@ -41,6 +41,9 @@ public class PublishController {
         return "publish";
     }
 
+    // post 方法，执行请求
+    // 接收参数，title,description,tag,id都是publish.html页面有的
+    // 这些参数都是前端页面传过来的
     @PostMapping("/publish")
     public String doPublish(
             @RequestParam(value = "title" , required = false) String title,
@@ -50,15 +53,18 @@ public class PublishController {
             HttpServletRequest request,
             Model model){
 
+        // 接收他们，为了回显到页面上去，保证即便输入内容为空，再次刷新后，内容可不好消失
         model.addAttribute("title" , title);
         model.addAttribute("description" , description);
         model.addAttribute("tag" , tag);
         model.addAttribute("tags", TagCache.get());
 
+        // 若title 为空，就会显示到页面上
         if(title == null || title.equals("")){
             model.addAttribute("error" , "标题不能为空");
             return "publish";
         }
+        // 验证是否输入为空
         if(description == null || description.equals("")){
             model.addAttribute("error" , "问题补充不能为空");
             return "publish";
@@ -74,11 +80,14 @@ public class PublishController {
             return "publish";
         }
 
+        // 通过session获得用户
         User user = (User) request.getSession().getAttribute("user");
+        // 如果输入全部为空，验证用户是否未登录
         if(user == null){
             model.addAttribute("error","用户未登录");
             return "publish";
         }
+        // 创建一个新的question对象 并新建 或 更新到数据库中
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
@@ -86,6 +95,7 @@ public class PublishController {
         question.setCreator(user.getId());
         question.setId(id);
         questionService.createOrUpdate(question);
+        // 没有问题就返回首页
         return "redirect:/";
     }
 }

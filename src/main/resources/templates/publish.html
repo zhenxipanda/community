@@ -20,10 +20,13 @@
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
             <hr>
 
+<!--            提交请求到/publish,路由到 publish，路由规则是post方法路由-->
             <form action="/publish" method="post">
+<!--                这个隐藏的id是question的主键，不显示在外面-->
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题 (简单扼要) ：</label>
+<!--                    input 用 th:value ， textarea 用 th:text-->
                     <input th:type="text" class="form-control" th:value="${title}" id="title" name="title"
                            placeholder="问题标题......"
                            autocomplete="off">
@@ -83,10 +86,13 @@
                     <div class="row">
                         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
                             <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
-                                 th:text="${error}" th:if="${error != null}"></div>
+                                 th:text="${error}" th:if="${error != null}">
+<!--                                当error 不为 null 的时候才展示红色报错信息-->
+                            </div>
                         </div>
                         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                             <button type="submit" class="btn btn-success btn-publish">发布</button>
+<!--                            当点击发布，提交submit时，会寻找post形式的publish-->
                         </div>
                     </div>
                 </div>
