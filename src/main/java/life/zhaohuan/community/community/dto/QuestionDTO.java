@@ -15,5 +15,6 @@ public class QuestionDTO {
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;
+    // 与Question 不同之处在于，多了User对象
     private User user;
 }

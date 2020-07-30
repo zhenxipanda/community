@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class IndexController {
 
-
     @Autowired
     private QuestionService questionService;
 

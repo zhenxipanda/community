@@ -34,6 +34,7 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
+    // 将问题按照搜索，页码，每页数量，展示在首页
     public PaginationDTO list(String search , Integer page, Integer size) {
         // 如果不使用搜索功能,search is null，不会进入if
         if(StringUtils.isNotBlank(search)){
@@ -67,13 +68,19 @@ public class QuestionService {
         questionExample.setOrderByClause("gmt_create desc");
         questionQueryDTO.setSize(size);
         questionQueryDTO.setPage(offset);
+        // 去数据库中查询 满足条件的 questions
         List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
+        // 新建放 QuestionDTO 的 列表
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
+            // 根据question自带的creator 得到用户id，根据用户id查询得到用户 user
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
+            // 将question 中的属性快速复制给 questionDTO
             BeanUtils.copyProperties(question , questionDTO);
+            // 只有questionDTO 的 user 属性还未赋值，所以set进去
             questionDTO.setUser(user);
+            // 将赋值完毕的 questionDTO 放入 questionDTOList 中
             questionDTOList.add(questionDTO);
         }
         paginationDTO.setData(questionDTOList);
