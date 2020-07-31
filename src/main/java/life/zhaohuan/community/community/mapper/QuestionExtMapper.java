@@ -17,4 +17,5 @@ public interface QuestionExtMapper {
 
     List<Question> selectBySearch(QuestionQueryDTO questionQueryDTO);
 
+    List<Question> selectBySearchNotLimit(QuestionQueryDTO questionQueryDTO);
 }
