@@ -9,12 +9,11 @@ import java.util.*;
 @Component
 @Data
 public class HotTagCache {
-    private Map<String, Integer> tags = new HashMap<>();
     private List<String> hots = new ArrayList<>();
 
     public void updateTags(Map<String, Integer> tags) {
 //        堆的大小
-        int max = 3;
+        int max = 10;
 //        最小堆
         PriorityQueue<HotTagDTO> priorityQueue = new PriorityQueue<>(max);
 

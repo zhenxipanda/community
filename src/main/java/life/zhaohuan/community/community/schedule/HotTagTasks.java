@@ -22,7 +22,7 @@ public class HotTagTasks {
     @Autowired
     private HotTagCache hotTagCache;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)  // 1000是ms ,也就是1s，60s ,60min , - > 1h * 3 = 3h
     // 使用定时任务将数据库中的问题拿出来
     public void hotTagSchedule(){
         int offset = 0;
@@ -48,14 +48,14 @@ public class HotTagTasks {
             }
             offset += limit;
         }
-        priorities.forEach(
-                (k , v)->{
-                    System.out.println(k);
-                    System.out.println(":");
-                    System.out.println(v);
-                    System.out.println();
-                }
-        );
+//        priorities.forEach(
+//                (k , v)->{
+//                    System.out.println(k);
+//                    System.out.println(":");
+//                    System.out.println(v);
+//                    System.out.println();
+//                }
+//        );
 //        对标签的map，利用最小堆进行排序
         hotTagCache.updateTags(priorities);
         log.info("hotTagSchedule stop {}",new Date());

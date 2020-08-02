@@ -77,7 +77,7 @@ public class QuestionService {
     }
 
     // 将问题按照搜索，页码，每页数量，展示在首页
-    public PaginationDTO list(String search , Integer page, Integer size) {
+    public PaginationDTO list(String search, String tag, Integer page, Integer size) {
         // 如果不使用搜索功能,search is null，不会进入if
         if(StringUtils.isNotBlank(search)){
             String[] tags = StringUtils.split(search , " ");
@@ -88,6 +88,12 @@ public class QuestionService {
 
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
+        if (StringUtils.isNotBlank(tag)) {
+            tag = tag.replace("+", "").replace("*", "").replace("?", "");
+            questionQueryDTO.setTag(tag);
+        }
+
+
         // totalCount 是数据库中 的条数 ，也就是问题的个数，行数
 //        自己定义的函数
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
