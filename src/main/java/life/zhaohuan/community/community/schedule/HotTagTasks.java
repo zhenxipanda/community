@@ -48,8 +48,7 @@ public class HotTagTasks {
             }
             offset += limit;
         }
-        hotTagCache.setTags(priorities);
-        hotTagCache.getTags().forEach(
+        priorities.forEach(
                 (k , v)->{
                     System.out.println(k);
                     System.out.println(":");
@@ -57,6 +56,8 @@ public class HotTagTasks {
                     System.out.println();
                 }
         );
+//        对标签的map，利用最小堆进行排序
+        hotTagCache.updateTags(priorities);
         log.info("hotTagSchedule stop {}",new Date());
     }
 }
