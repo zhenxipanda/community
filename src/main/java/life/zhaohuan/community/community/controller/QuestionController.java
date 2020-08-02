@@ -22,16 +22,18 @@ public class QuestionController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/question/{id}")
+    @GetMapping("/question/{id}") 
+//    跳转到Id 为多少的问题
     public String question(@PathVariable(name = "id") Long id,
                            Model model){
+        // 去question表中，查询question_id 为 id 的问题
         QuestionDTO questionDTO = questionService.getById(id);
         List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         List<CommentDTO> comments = commentService.listByTargetId(id , CommentTypeEnum.QUESTION);
         //累加阅读数
         questionService.incView(id);
 
-        // 这样就保证前端页面可以用 question等
+        // 这样就保证前端页面可以用 question等 ，页面就可以展示question的详细内容了
         model.addAttribute("question" , questionDTO);
         model.addAttribute("comments" , comments);
         model.addAttribute("relatedQuestions" , relatedQuestions);

@@ -25,6 +25,7 @@ public class ProfileController {
 
 
     @GetMapping("/profile/{action}")  // 因为是get方法，另外希望他访问profile的时候，调用这个地址
+    // 加上action是为了动态切换路径
     public String profile(HttpServletRequest request,
                           @PathVariable(name = "action") String action,
                           Model model,
@@ -36,11 +37,14 @@ public class ProfileController {
             return "redirect:/";
         }
         if ("questions".equals(action)) {
+            // 显示我的问题页面
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
+//            通过user.id，得到此用户所提的问题
             PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
+            // 显示最新回复页面
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
             model.addAttribute("section", "replies");
             model.addAttribute("pagination", paginationDTO);

@@ -10,12 +10,16 @@
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
+<!--导航栏-->
 <div th:insert="~{navigation :: nav}"></div>
+<!--正文部分-->
 <div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+<!--            根据右侧选择的不同，这里展示的列表不同，名称不同-->
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
+<!--            如果是我的问题列表-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'questions'}">
                 <div class="media" th:each="question : ${pagination.data}">
                     <div class="media-left">
@@ -40,6 +44,7 @@
                     </div>
                 </div>
             </div>
+<!--            如果是最新回复列表-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'replies'}">
                 <div class="media" th:each="notification : ${pagination.data}">
                     <div class="media-body">
@@ -53,10 +58,12 @@
                     </div>
                 </div>
             </div>
+<!--           分页-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li th:if="${pagination.showFirstPage}">
+<!--                            不能再跳转到page=几了，因为这里需要是/profile/question/page=?-->
                             <a href="@{'/profile/'+${section}(page=${1})}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;&lt;</span>
                             </a>
@@ -85,19 +92,25 @@
                 </nav>
             </div>
         </div>
+<!--        右侧，列表选择-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="list-group section">
+<!--                路由到根目录下的/profile/question-->
                 <a href="/profile/questions"
-                   th:class="${section == 'questions'}? 'active list-group-item' : 'list-group-item'">我的问题</a>
+                   th:class="${section == 'questions'}? 'active list-group-item' : 'list-group-item'">
+                    我的问题</a>
+<!--                路由到根目录下的/profile/replies-->
                 <a href="/profile/replies"
                    th:class="${section == 'replies'}? 'active list-group-item' : 'list-group-item'">
                     最新回复
+<!--                    徽章，有多少未读-->
                     <span class="badge" th:text="${session.unreadCount}"></span>
                 </a>
             </div>
         </div>
     </div>
 </div>
+<!--尾页-->
 <div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

@@ -89,6 +89,7 @@ public class QuestionService {
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
         // totalCount 是数据库中 的条数 ，也就是问题的个数，行数
+//        自己定义的函数
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         if(totalCount % size == 0){
             totalPage = totalCount / size;
@@ -110,9 +111,9 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         // 计算offset 是为了 分页显示 limit offset , size
 
-        // 设置问题为按创建时间倒序
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
+        // 设置问题为按创建时间倒序 这里设置没有用，因为questionExample并没有传到数据库去查询，倒序展示，是因为数据库查询时加了order by
+//        QuestionExample questionExample = new QuestionExample();
+//        questionExample.setOrderByClause("gmt_create desc");
         questionQueryDTO.setSize(size);
         questionQueryDTO.setPage(offset);
         // 去数据库中查询 满足条件的 questions 也就是此页要展示的question
@@ -142,6 +143,8 @@ public class QuestionService {
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);
+//        根据用户id 去数据库question表中查该用户创建的问题总数
+//        这次查询时获得总数，Integer类型
         Integer totalCount = (int) questionMapper.countByExample(questionExample);
         if(totalCount % size == 0){
             totalPage = totalCount / size;
@@ -160,18 +163,18 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage,page);
         //size*(page-1)
         Integer offset = size * (page - 1);
-        QuestionExample example = new QuestionExample();
-        example.createCriteria()
-                .andCreatorEqualTo(userId);
+//        这次查询是查询出所有的问题列表
         // 自己修复的
         // 看看能否 profile.html 的 我的问题是 按时间倒序 可以诶！
-        example.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
+        questionExample.setOrderByClause("gmt_create desc");
+        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
+//            通过主键查询，问题的创建者，得到用户user
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question , questionDTO);
+//            将用户添加到questionDTO
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
@@ -179,6 +182,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
+//    根据问题 id 查询出这条问题
     public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
@@ -186,6 +190,7 @@ public class QuestionService {
         }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question , questionDTO);
+//        同样的，为了展示用户名称，需要查询到这个问题的创建者
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;

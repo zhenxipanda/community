@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Service
+@Service  // 加入这个注解，Spring就会接管，使得Autowired工作
+//需要实现三个方法
 public class SessionInterceptor implements HandlerInterceptor {
 
 
@@ -23,7 +24,9 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private NotificationService notificationService;
+
     @Override
+//    希望在程序处理之前做 拦截器
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 实现持久化登录 ，是指在登录状态下，打开另一个浏览器输入网页，仍然保持登录状态
         // 前后端以 token 进行验证
