@@ -22,9 +22,11 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+//    一点 编辑， 就会路由到这里
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Long id,
                        Model model){
+//        获取这条question，显示到页面
         QuestionDTO question = questionService.getById(id);
         model.addAttribute("title" , question.getTitle());
         model.addAttribute("description" , question.getDescription());
@@ -44,6 +46,7 @@ public class PublishController {
     // post 方法，执行请求
     // 接收参数，title,description,tag,id都是publish.html页面有的
     // 这些参数都是前端页面传过来的
+//    一点击 发布，就会路由到这个方法
     @PostMapping("/publish")
     public String doPublish(
             @RequestParam(value = "title" , required = false) String title,

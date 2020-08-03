@@ -38,6 +38,7 @@
 <!--                右边，问题的标题，描述，回复数，浏览数，创建时间-->
                 <div class="media-body">
                     <h4 class="media-heading">
+<!--                        标题有链接，一点击就能跳转到问题详情页面-->
                         <a th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
                     </h4>
                     <span th:text="${question.description}"></span> <br>

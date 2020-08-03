@@ -26,6 +26,7 @@ public class CommentController {
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request){
+//        先验证用户信息，是否登录
         User user = (User)request.getSession().getAttribute("user");
         if(user == null){
             return ResultDTO.errorOf(CustomizedErrorCode.NO_LOGIN);
@@ -35,6 +36,7 @@ public class CommentController {
         if(commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())){
             return ResultDTO.errorOf(CustomizedErrorCode.CONTENT_IS_EMPTY);
         }
+//        创建一个评论，父id，内容，类型（评论 or 回复），创建时间和修改时间，创建者，点赞数
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());
         comment.setContent(commentCreateDTO.getContent());
@@ -43,6 +45,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
+        comment.setCommentCount(0);
         commentService.insert(comment , user);
         return ResultDTO.okOf();
     }

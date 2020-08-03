@@ -56,6 +56,7 @@ public class AuthorizedController {
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setAvatarUrl(githubUser.getAvatarUrl());
+            // 这是修复登录问题，之前每次登录都会创建一个新用户
             userService.createOrUpdate(user);
             // 把 token 写入 cookie
             response.addCookie(new Cookie("token" , token));
@@ -72,8 +73,10 @@ public class AuthorizedController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request,
                          HttpServletResponse response){
+//        移除session
         request.getSession().removeAttribute("user");  // not "name"
         Cookie cookie = new Cookie("token" , null);
+//        移除cookie，建立重名的，设置maxAge=0
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return "redirect:/";

@@ -204,7 +204,7 @@ public class QuestionService {
 
     public void createOrUpdate(Question question) {
         if(question.getId() == null){
-            // 创建
+            // 创建 向数据库传递的是question对象 都是insert()
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             question.setViewCount(0);
@@ -222,6 +222,7 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
+//            更新都是两个参数，一个是新建的对象，设置了新属性，一个是从数据库中查询出来的原来Id,更新，不用新插入
             int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
             if(updated != 1){
                 throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
@@ -229,6 +230,7 @@ public class QuestionService {
         }
     }
 
+//    累加阅读数
     public void incView(Long id) {
         Question question = new Question();
         question.setId(id);

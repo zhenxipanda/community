@@ -15,6 +15,7 @@
   <update id="incView" parameterType="life.zhaohuan.community.community.model.Question">
     update QUESTION
     set
+--     在QuestionService里面，set viewCount = 1 , 加号右边的应该是1
     VIEW_COUNT = VIEW_COUNT + #{viewCount,jdbcType=INTEGER}
     where id = #{id}
     </update>

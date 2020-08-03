@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@MapperScan("life.zhaohuan.community.community.mapper")
+@MapperScan("life.zhaohuan.community.community.mapper")  //这样能自动路由到Mapper文件
 //开启 @Scheduled
 @EnableScheduling
 public class CommunityApplication {

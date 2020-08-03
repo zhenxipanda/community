@@ -40,9 +40,11 @@ public class CommentService {
 
     @Transactional
     public void insert(Comment comment , User commentator) {
+//        父 id 为空，提示
        if(comment.getParentId() == null || comment.getParentId() == 0){
            throw new CustomizedException(CustomizedErrorCode.TARGET_PARAM_NOT_FOUND);
        }
+//       评论类型为空，提示
        if(comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())){
            throw new CustomizedException(CustomizedErrorCode.TYPE_PARAM_WRONG);
        }
@@ -75,7 +77,7 @@ public class CommentService {
            }
            // 解决回复评论数 为 null 的问题，一直不显示，因为 null + 1 ,不成功
            // 创建 comment 的时候，初始化为0.因为数据库设置了默认是0，并且 0+ 1也没问题，所以修改这里
-           comment.setCommentCount(0);
+        //   comment.setCommentCount(0);
            commentMapper.insert(comment);
            question.setCommentCount(1);
            questionExtMapper.incCommentCount(question);
