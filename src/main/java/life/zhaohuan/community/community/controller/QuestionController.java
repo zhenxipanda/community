@@ -28,7 +28,9 @@ public class QuestionController {
                            Model model){
         // 去question表中，查询question_id 为 id 的问题
         QuestionDTO questionDTO = questionService.getById(id);
+//        为了实现右侧的相关问题
         List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
+//        获取此问题的评论,QUESTION:1
         List<CommentDTO> comments = commentService.listByTargetId(id , CommentTypeEnum.QUESTION);
         //累加阅读数
         questionService.incView(id);

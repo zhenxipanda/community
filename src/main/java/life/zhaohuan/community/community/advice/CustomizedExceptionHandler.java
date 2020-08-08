@@ -33,6 +33,7 @@ public class CustomizedExceptionHandler {
                 response.setStatus(200);
                 response.setCharacterEncoding("utf-8");
                 PrintWriter writer = response.getWriter();
+//                把object转为json
                 writer.write(JSON.toJSONString(resultDTO));
                 writer.close();
             } catch (IOException ioe) {

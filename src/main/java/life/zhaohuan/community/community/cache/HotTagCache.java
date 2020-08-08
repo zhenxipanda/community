@@ -28,7 +28,9 @@ public class HotTagCache {
                 HotTagDTO minHot = priorityQueue.peek(); //最小堆，这是最不热门的
                 if (hotTagDTO.compareTo(minHot) > 0) {  //传入的 比 堆顶大
                     priorityQueue.poll(); //删堆顶
-                    priorityQueue.offer(hotTagDTO); //加入新元素
+                    priorityQueue.
+
+                            offer(hotTagDTO); //加入新元素
                 }
             }
         });

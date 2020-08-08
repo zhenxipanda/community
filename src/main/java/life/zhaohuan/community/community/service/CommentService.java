@@ -44,14 +44,17 @@ public class CommentService {
        if(comment.getParentId() == null || comment.getParentId() == 0){
            throw new CustomizedException(CustomizedErrorCode.TARGET_PARAM_NOT_FOUND);
        }
-//       评论类型为空，提示
+//       评论类型为空，提示  评论类型不对，提示
        if(comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())){
            throw new CustomizedException(CustomizedErrorCode.TYPE_PARAM_WRONG);
        }
+//       COMMENT : 1
        if(comment.getType() == CommentTypeEnum.COMMENT.getType()){
            // 回复评论
+//           因为是回复评论，所以需要去comment表中查找
            Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
            if(dbComment == null){
+//               评论不存在
                throw new CustomizedException(CustomizedErrorCode.COMMENT_NOT_FOUND);
            }
            // 回复问题
@@ -70,7 +73,7 @@ public class CommentService {
            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
 
        }else{
-           // 回复问题
+           // 回复问题，去question表中查找
            Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
            if(question == null){
                throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
@@ -79,6 +82,7 @@ public class CommentService {
            // 创建 comment 的时候，初始化为0.因为数据库设置了默认是0，并且 0+ 1也没问题，所以修改这里
         //   comment.setCommentCount(0);
            commentMapper.insert(comment);
+//           设置步长，每次自增1
            question.setCommentCount(1);
            questionExtMapper.incCommentCount(question);
            // 创建通知
@@ -104,6 +108,7 @@ public class CommentService {
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
+//        找到父id是传入id的，且评论类型是1的comments
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
