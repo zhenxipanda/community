@@ -38,7 +38,7 @@ public class CommentService {
     @Autowired
     private NotificationMapper notificationMapper;
 
-    @Transactional
+    @Transactional   //事务注解
     public void insert(Comment comment , User commentator) {
 //        父 id 为空，提示
        if(comment.getParentId() == null || comment.getParentId() == 0){

@@ -2,8 +2,10 @@
  * 提交回复
  */
 function post() {
+    //通过question.html的input的id,textarea的id，得到值
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
+    //console.log(questionId),就可以在页面上看到这个值
     comment2target(questionId, 1, content);
 }
 
@@ -15,7 +17,7 @@ function comment2target(targetId, type, content) {
     }
     $.ajax({
         type: "POST",
-        url: "/comment",
+        url: "/comment",  // 希望路由到根目录的comment，"comment"会在后面添加
         contentType: 'application/json',
         data: JSON.stringify({
             "parentId": targetId,
@@ -26,7 +28,7 @@ function comment2target(targetId, type, content) {
             if (response.code == 200) {
                 window.location.reload();  //自动刷新，回复完，就不再手动刷新
             } else {
-                if (response.code == 2003) {
+                if (response.code == 2003) {  //2003就是没有登录
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
                         window.open("https://github.com/login/oauth/authorize?client_id=2286e064a2bfcca68e0c&redirect_uri=http://localhost:8080/callback&scope=user&state=1");
