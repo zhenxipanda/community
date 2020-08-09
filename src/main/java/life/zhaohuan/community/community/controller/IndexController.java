@@ -30,9 +30,10 @@ public class IndexController {
                         @RequestParam(name = "page",defaultValue = "1") Integer page,
                         @RequestParam(name = "size",defaultValue = "6") Integer size,
                         @RequestParam(name = "search",required = false) String search,
-                        @RequestParam(name = "tag",required = false) String tag){
+                        @RequestParam(name = "tag",required = false) String tag,
+                        @RequestParam(name = "sort",required = false) String sort){
         // 原始做法
-        PaginationDTO pagination = questionService.list(search ,tag, page,size);
+        PaginationDTO pagination = questionService.list(search ,tag, sort , page,size);
         model.addAttribute("pagination",pagination);
         List<String> tags = hotTagCache.getHots();
         // 使用PageHelper 分页
@@ -43,6 +44,7 @@ public class IndexController {
         model.addAttribute("tags",tags);
 //        tag 是问题所属标签
         model.addAttribute("tag",tag);
+        model.addAttribute("sort" , sort);
         return "index";
     }
 }

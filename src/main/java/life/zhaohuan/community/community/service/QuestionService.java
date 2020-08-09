@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import life.zhaohuan.community.community.dto.PaginationDTO;
 import life.zhaohuan.community.community.dto.QuestionDTO;
 import life.zhaohuan.community.community.dto.QuestionQueryDTO;
+import life.zhaohuan.community.community.enums.SortEnum;
 import life.zhaohuan.community.community.exception.CustomizedErrorCode;
 import life.zhaohuan.community.community.exception.CustomizedException;
 import life.zhaohuan.community.community.mapper.QuestionExtMapper;
@@ -77,11 +78,16 @@ public class QuestionService {
     }
 
     // 将问题按照搜索，页码，每页数量，展示在首页
-    public PaginationDTO list(String search, String tag, Integer page, Integer size) {
+    public PaginationDTO list(String search, String tag, String sort, Integer page, Integer size) {
         // 如果不使用搜索功能,search is null，不会进入if
         if(StringUtils.isNotBlank(search)){
             String[] tags = StringUtils.split(search , " ");
-            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+            search = Arrays
+                    .stream(tags)
+                    .filter(StringUtils::isNotBlank)
+                    .map(t -> t.replace("+","").replace("*","").replace("?",""))
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
         }
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
@@ -92,7 +98,18 @@ public class QuestionService {
             tag = tag.replace("+", "").replace("*", "").replace("?", "");
             questionQueryDTO.setTag(tag);
         }
-
+        for (SortEnum sortEnum : SortEnum.values()) {
+            if(sortEnum.name().toLowerCase().equals(sort)){
+                questionQueryDTO.setSort(sort);
+                if(sortEnum == sortEnum.HOT7){
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7);
+                }
+                if(sortEnum == sortEnum.HOT30){
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30);
+                }
+                break;
+            }
+        }
 
         // totalCount 是数据库中 的条数 ，也就是问题的个数，行数
 //        自己定义的函数
@@ -114,7 +131,7 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage,page);
 
         //size*(page-1)
-        Integer offset = size * (page - 1);
+        Integer offset = page < 1 ? 0 : size * (page - 1);
         // 计算offset 是为了 分页显示 limit offset , size
 
         // 设置问题为按创建时间倒序 这里设置没有用，因为questionExample并没有传到数据库去查询，倒序展示，是因为数据库查询时加了order by
