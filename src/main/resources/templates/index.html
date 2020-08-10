@@ -29,7 +29,7 @@
             <ul class="nav nav-tabs">
 <!--                选择最热 或者 默认-->
                 <li role="presentation" th:class="${sort == 'new' || sort == ''?'active':''}">
-                    <a th:href="@{/(sort='new'}">最新</a>
+                    <a th:href="@{/(sort='new')}">最新</a>
                 </li>
                 <li role="presentation" th:class="${sort == 'hot30' ? 'active' : ''}">
                     <a th:href="@{/(sort='hot30')}">30天最热</a>
